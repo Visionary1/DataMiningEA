@@ -3,11 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>17S DataMiningEA - Group 5 - 2nd Scrum</title>
+<title>DataMining 17S Group 5 Final Report</title>
 <link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<style type="text/css">
+
+body {
+  font-size:12pt;
+}
+
+</style>
 </head>
-<body><div class="container"><h1 id="data-mining-17s-team-project-2nd-scrum">Data Mining 17S Team Project 2nd Scrum</h1>
+<body><div class="container"><h1 id="data-mining-17s-team-project">Data Mining 17S Team Project</h1>
 
 <hr>
 
@@ -43,26 +50,26 @@
 
 
 
-<h3 id="executive-summary">Executive summary</h3>
+<h3 id="executive-summary"><strong>Executive summary</strong></h3>
 
-<p>We are going to use data set from Kaggle, <a href="https://www.kaggle.com/dmi3kno/newcarsalesnorway">New Car Sales in Norway (2007~2017 Jan)</a> to predict future(2017 Feb~) car sales in Norway.  The forecasting process will be done in pure R, especially using <em>forecast</em> package. On 1st scrum, we used <em>ARIMA</em> to do the forecast, as professor suggested that <em>ARIMA</em> is good for dealing with time series data. On 2nd scrum, we are going to run two additional models besides <em>ARIMA</em> to find out the fittest model. Rather than starting a prediction right away, we will first run models to predict sales in 2016 to check how precise they are. We will see which model gives the least errors compared to actual data. And then we will use the best model(which gives the least error) to predict sales in 2017.</p>
+<p>We used data set from Kaggle, <a href="https://www.kaggle.com/dmi3kno/newcarsalesnorway">New Car Sales in Norway (2007~2017 Jan)</a> to predict future(2017 Feb~) car sales in Norway.  The forecasting process is done in pure R, especially using <em>forecast</em> package. On 1st scrum, we used <em>ARIMA</em> to do the forecast, as professor suggested that <em>ARIMA</em> is good for dealing with time series data. On 2nd scrum, we ran two additional models besides <em>ARIMA</em> to find out the fittest model. Rather than starting a prediction right away, we will first run models to predict sales in 2016 to check how precise they are. We will see which model gives the least errors compared to actual data. And then we will use the best model(which gives the least error) to predict sales in 2017.</p>
 
 
 
-<h3 id="problem-description">Problem Description</h3>
+<h3 id="problem-description"><strong>Problem Description</strong></h3>
 
 <p>We want to be able to predict future data results based on what already achieved in the past, without guessing wildly, where everyone is able to make speculation backed by data. With the available past sales data’s range of 10 years, we can use it to predict the sales data for following months. As of now, our available sales data up to January 2017, and it gives us opportunity to attempt predicting sales for February, March, May, and so on. The problem with predicting the future is uncertainties. If we ignore this problem, it will makes the whole project itself no different than making a wild guess. Uncertainties happened when the data that was provided shows more than one possible result, which means the further we try to predict, the more uncertainties shows up as we still need to determine the amount of possible outcome from the earlier prediction.  <br>
 The forecasting models will greatly help us in predicting the future based on our available data and it match well to assist us in processing.</p>
 
 
 
-<h3 id="data-description">Data Description</h3>
+<h3 id="data-description"><strong>Data Description</strong></h3>
 
 <p>Dataset includes monthly car sales in Norway from 2007 January to 2017 January. It has been collected by the Road Traffic Information Council (OFV) and can be accessed from Kaggle. We are using <strong>norway_new_car_sales_by_month.csv</strong>, all inputs are numberic. It has 121 rows and 17 columns, important input variables are Year, Month, and Quantity, others are not relevant in terms of sales prediction.</p>
 
 
 
-<pre class="prettyprint"><code class=" hljs vala">&gt; norway_new_car_sales_by_month.csv 
+<pre class="prettyprint"><code class="language-R hljs vala">&gt; norway_new_car_sales_by_month.csv 
 
 <span class="hljs-preprocessor">## Observations: 121</span>
 <span class="hljs-preprocessor">## Variables: 17</span>
@@ -84,28 +91,27 @@ The forecasting models will greatly help us in predicting the future based on ou
 <span class="hljs-preprocessor">## $ Quantity_Electric &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...</span>
 <span class="hljs-preprocessor">## $ Import_Electric   &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ..</span></code></pre>
 
-<h3 id="utility">Utility</h3>
+
+
+<h3 id="utility"><strong>Utility</strong></h3>
 
 <p>The information that is derived from forecasting analysis can be applied in various terms and these insights might be useful especially for car manufacturers in XXI century’s competitive business environment. Since Norway is ecofriendly country, the current trend on electric and hybrid car market gives a challenge for companies to find more competitive ways for selling their cars to Norwegian people.  By knowing sales forecast, car manufacturers can estimate their expenses on manufacturing, distribution, servicing, and others. Also, it might help them to adjust their manufacturing facility to meet with the future demand. This is like a chain system, by knowing forecast, it will help companies to work more efficiently, not face with cash availability problems, make effective marketing strategy, predict competitor’s reaction, and have better measures of sales potential, like how much will be the maximum total revenue or number of units that company will sell.</p>
 
 
 
-<h3 id="preprocessing-of-data">Preprocessing of Data</h3>
+<h3 id="preprocessing-of-data"><strong>Preprocessing of Data</strong></h3>
 
 <p>First, We load the R libraries that we need for this analysis.</p>
 
 
 
-<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">library</span><span class="hljs-params">(forecast)</span>
-<span class="hljs-title">library</span><span class="hljs-params">(dplyr)</span>
+<pre class="prettyprint"><code class="language-R hljs erlang"><span class="hljs-function"><span class="hljs-title">library</span><span class="hljs-params">(forecast)</span>
 <span class="hljs-title">library</span><span class="hljs-params">(tseries)</span>
 <span class="hljs-title">library</span><span class="hljs-params">(zoo)</span></span></code></pre>
 
-<p>The <em>forecast</em> is for the functions we need for predicting time series data. The <em>dylyr</em> is for manipulating data frames.  The <em>tseries</em> is a package for handling time series data. And <em>zoo</em> is for the use of trans-forming a data(as.yearmon)</p>
+<p>The <em>forecast</em> is for the functions we need for predicting time series data. The <em>tseries</em> is a package for handling time series data. And <em>zoo</em> is for the use of trans-forming a data(as.yearmon)</p>
 
 <p>After installing dependencies, read the csv data</p>
-
-
 
 <pre class="prettyprint"><code class=" hljs livecodeserver">dt&lt;-<span class="hljs-built_in">read</span>.csv(<span class="hljs-string">"...path/norway_new_car_sales_by_month.csv"</span>, header = <span class="hljs-constant">TRUE</span>, stringsAsFactors = <span class="hljs-constant">FALSE</span>)</code></pre>
 
@@ -113,23 +119,19 @@ The forecasting models will greatly help us in predicting the future based on ou
 
 <p><img src="http://i.imgur.com/kyNru6F.png" alt="enter image description here" title=""></p>
 
-<p>It is because there are too many input variables(and some NAs). In order to make a clean, usable data(for our project), we will discard some variables that are irrelevant. Total quantity of sales by yearly, monthly, and type of car(electric, diesel, hybrid…etc) sales are the ones that we care about. Besides, we have to convert the data frame to ts(time series) for manipulation.</p>
-
-
+<p>It is because there are too many input variables(and some NAs). In order to make a clean, usable data(for our project), we will neglect variables that are irrelevant. Total quantity of sales by yearly, monthly, and car saels in specific type (electric, diesel, hybrid…etc) will be used in this project, others are no use when forecasting time series. Then, let’s make a time series data, as follows.</p>
 
 <pre class="prettyprint"><code class=" hljs scss"><span class="hljs-tag">dt</span>&lt;<span class="hljs-function">-transform(dt, Yearmon = as.<span class="hljs-function">yearmon(<span class="hljs-function">paste(Year, Month, sep = <span class="hljs-string">"-"</span>)</span>)</span>)</span>
 <span class="hljs-tag">dt</span>$Date&lt;-as<span class="hljs-class">.Date</span>(<span class="hljs-tag">dt</span>$Yearmon)
 
 dt_ts&lt;<span class="hljs-function">-ts(dt$Quantity, frequency=<span class="hljs-number">12</span>, start=<span class="hljs-function">c(<span class="hljs-number">2007</span>,<span class="hljs-number">1</span>)</span>, end = <span class="hljs-function">c(<span class="hljs-number">2016</span>,<span class="hljs-number">12</span>)</span>)</span>
-<span class="hljs-function">plot(dt_ts)</span></code></pre>
+<span class="hljs-function">plot(dt_ts, main = <span class="hljs-string">"Car sales in Norway"</span>, xlab = <span class="hljs-string">"Year"</span>, ylab = <span class="hljs-string">"Quantity"</span>)</span></code></pre>
 
-<p><img src="http://i.imgur.com/X03zFw7.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/9sSAxyK.png" alt="enter image description here" title=""></p>
 
-<p>So now we have our time series data. The next step is modeling.</p>
+<p>Now we have our time series data. The next step is modeling.</p>
 
-
-
-<h4 id="choosing-a-model">Choosing a model</h4>
+<h4 id="choosing-a-model"><strong>Choosing a model</strong></h4>
 
 <p>We did mention that we would use several models to see how they predict sales in 2016. We will use the model that go close to the actual data for forecasting of 2017. As we are asked to use 3 different models(1 for 1st scrum, +2 for 2nd scrum), we will use the following models.</p>
 
@@ -139,48 +141,50 @@ dt_ts&lt;<span class="hljs-function">-ts(dt$Quantity, frequency=<span class="hlj
 <li>ARIMA (did this in 1st scrum)</li>
 </ol>
 
+<p>To make models to forecast year 2016, it is necessary to set <em>end</em> parameter as <em>end = (2015, 12)</em></p>
 
 
-<h4 id="model-1-exponential-state-smoothingets">Model 1. Exponential State Smoothing(ETS)</h4>
+
+<pre class="prettyprint"><code class=" hljs scss">dt_ts&lt;<span class="hljs-function">-ts(dt$Quantity, frequency=<span class="hljs-number">12</span>, start=<span class="hljs-function">c(<span class="hljs-number">2007</span>,<span class="hljs-number">1</span>)</span>, end = <span class="hljs-function">c(<span class="hljs-number">2015</span>,<span class="hljs-number">12</span>)</span>)</span></code></pre>
+
+
+
+<h4 id="model-1-exponential-state-smoothingets"><strong>Model 1. Exponential State Smoothing(ETS)</strong></h4>
 
 <p>The ETS function is in <em>forecast</em> package, and is used for making forecasts. Although it is best used in data that where past observations are weighted equally(simple moving average), we did give it a try.</p>
 
 
 
 <pre class="prettyprint"><code class=" hljs scss">fitstl&lt;<span class="hljs-function">-stl(dt_ts, s.window = <span class="hljs-string">"period"</span>)</span>
-m_ets&lt;<span class="hljs-function">-forecast(fitstl, method = <span class="hljs-string">"ets"</span>, h=<span class="hljs-number">12</span>)</span>
-<span class="hljs-function">plot(m_ets)</span></code></pre>
+pred_ETS&lt;<span class="hljs-function">-forecast(fitstl, method = <span class="hljs-string">"ets"</span>, h=<span class="hljs-number">12</span>)</span>
+<span class="hljs-function">plot(pred_ETS, xlab =<span class="hljs-string">"Year"</span>, ylab = <span class="hljs-string">"Quantity"</span>)</span></code></pre>
 
-<p><img src="http://i.imgur.com/7boHnMq.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/kNPU8Qg.png" alt="enter image description here" title=""></p>
 
 <p>By specifying <em>h=12</em>, we made a prediction for next 12 months. <br>
 The gap between gray area and blue area(AKA confidence interval) seems big. We’ll compare this prediction with other models and with actual data later.</p>
 
 
 
-<h4 id="model-2-tbats">Model 2. TBATS</h4>
+<h4 id="model-2-tbats"><strong>Model 2. TBATS</strong></h4>
 
-<p>TBATS model is designed for forecasting and is best applied when the data has cyclic patterns.</p>
+<p>The TBATS model is a forecasting model specifically designed to handle cyclic patterns(seasonality).</p>
 
+<pre class="prettyprint"><code class=" hljs erlang">pred_<span class="hljs-variable">TBATS</span> = forecast(tbats(dt_ts), h=<span class="hljs-number">12</span>)
+<span class="hljs-function"><span class="hljs-title">plot</span><span class="hljs-params">(pred_<span class="hljs-variable">TBATS</span>, xlab =<span class="hljs-string">"Year"</span>, ylab = <span class="hljs-string">"Quantity"</span>)</span></span></code></pre>
 
-
-<pre class="prettyprint"><code class=" hljs fix"><span class="hljs-attribute">fut_tbats </span>=<span class="hljs-string"> forecast(tbats(dt_ts), h=12)
-plot(fut_tbats)</span></code></pre>
-
-<p><img src="http://i.imgur.com/v0k2F2P.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/WtoUGqH.png" alt="enter image description here" title=""></p>
 
 <p>Prediction seems almost same as Model 1.</p>
 
 
 
-<h4 id="model-3-arima">Model 3. ARIMA</h4>
+<h4 id="model-3-arima"><strong>Model 3. ARIMA</strong></h4>
 
-<p>ARIMA is considered as the best function for predicting time series. <em>auto.arima()</em> automatically optimizes parameter and gives you the best model(within ARIMA). <br>
+<p>ARIMA is generally considered as the best model for predicting time series. <em>auto.arima()</em> automatically optimizes parameter and gives you the best model(within ARIMA). <br>
 On 1st scrum, we wrote ARIMA manually, but, turned out on 2nd scrum that it could be done automatically by using <em>auto.arima</em>.</p>
 
 <p>1st scrum (legacy way)</p>
-
-
 
 <pre class="prettyprint"><code class=" hljs lasso">library(tseries)
 
@@ -189,17 +193,15 @@ adf<span class="hljs-built_in">.</span>test(diff(<span class="hljs-keyword">log<
 pred <span class="hljs-subst">&lt;-</span> predict(fit, n<span class="hljs-built_in">.</span>ahead <span class="hljs-subst">=</span> <span class="hljs-number">1</span><span class="hljs-subst">*</span><span class="hljs-number">12</span>)
 ts<span class="hljs-built_in">.</span>plot(dt_ts,<span class="hljs-number">2.718</span>^pred<span class="hljs-variable">$pred</span>, <span class="hljs-keyword">log</span> <span class="hljs-subst">=</span> <span class="hljs-string">"y"</span>, lty <span class="hljs-subst">=</span> c(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>))</code></pre>
 
-<p><img src="http://i.imgur.com/OF7MZGq.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/uzi1XJG.png" alt="enter image description here" title=""></p>
 
 <p>2nd scrum (using <em>auto.arima</em>)</p>
 
+<pre class="prettyprint"><code class=" hljs erlang">aarima = auto.arima(dt_ts)
+pred_<span class="hljs-variable">ARIMA</span> = forecast(aarima, h=<span class="hljs-number">12</span>)
+<span class="hljs-function"><span class="hljs-title">plot</span><span class="hljs-params">(pred_<span class="hljs-variable">ARIMA</span>, xlab =<span class="hljs-string">"Year"</span>, ylab = <span class="hljs-string">"Quantity"</span>)</span></span></code></pre>
 
-
-<pre class="prettyprint"><code class=" hljs makefile"><span class="hljs-constant">aarima</span> = auto.arima(dt_ts)
-<span class="hljs-constant">fut_aa</span> = forecast(aarima, h=12)
-plot(fut_aa)</code></pre>
-
-<p><img src="http://i.imgur.com/6ueggrm.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/hojpoEr.png" alt="enter image description here" title=""></p>
 
 <p>Both way produce a same result.</p>
 
@@ -207,7 +209,7 @@ plot(fut_aa)</code></pre>
 
 
 
-<h4 id="best-model">Best model ?</h4>
+<h4 id="best-model"><strong>Best model ?</strong></h4>
 
 <p>Now, we will compare the actual data with predicted data. <br>
 (data is from 2016 January to 2016 December)</p>
@@ -388,33 +390,24 @@ plot(fut_aa)</code></pre>
 </tbody></table>
 
 
-<p>and let’s visualize these in R…</p>
+<p>and let’s visualize these in R</p>
 
+<pre class="prettyprint"><code class="language-r hljs ">actual &lt;- c(<span class="hljs-number">10991</span>, <span class="hljs-number">12222</span>, <span class="hljs-number">13875</span>, <span class="hljs-number">14116</span>, <span class="hljs-number">12864</span>, <span class="hljs-number">13681</span>, <span class="hljs-number">11040</span>, <span class="hljs-number">13232</span>, <span class="hljs-number">13854</span>, <span class="hljs-number">11932</span>, <span class="hljs-number">13194</span>, <span class="hljs-number">13055</span>)
+p_ETS &lt;- c(<span class="hljs-number">12330</span>, <span class="hljs-number">12108</span>, <span class="hljs-number">13667</span>, <span class="hljs-number">13131</span>, <span class="hljs-number">13312</span>, <span class="hljs-number">12849</span>, <span class="hljs-number">13242</span>, <span class="hljs-number">12662</span>, <span class="hljs-number">12821</span>, <span class="hljs-number">13507</span>, <span class="hljs-number">12981</span>, <span class="hljs-number">12514</span>)
+p_TBATS &lt;- c(<span class="hljs-number">12235</span>, <span class="hljs-number">12165</span>, <span class="hljs-number">13647</span>, <span class="hljs-number">13468</span>, <span class="hljs-number">13012</span>, <span class="hljs-number">12736</span>, <span class="hljs-number">13172</span>, <span class="hljs-number">12876</span>, <span class="hljs-number">12754</span>, <span class="hljs-number">13635</span>, <span class="hljs-number">12642</span>, <span class="hljs-number">12582</span>)
+p_ARIMA &lt;- c(<span class="hljs-number">12481</span>, <span class="hljs-number">12550</span>, <span class="hljs-number">13304</span>, <span class="hljs-number">13005</span>, <span class="hljs-number">12843</span>, <span class="hljs-number">13314</span>, <span class="hljs-number">12921</span>, <span class="hljs-number">12966</span>, <span class="hljs-number">12927</span>, <span class="hljs-number">13095</span>, <span class="hljs-number">12966</span>, <span class="hljs-number">13069</span>)
 
+compare &lt;- data.frame(actual, p_ETS, p_TBATS, p_ARIMA, Month = c(<span class="hljs-number">1</span>:<span class="hljs-number">12</span>))
 
-<pre class="prettyprint"><code class=" hljs scss">actual &lt;- <span class="hljs-function">c(<span class="hljs-number">10991</span>, <span class="hljs-number">12222</span>, <span class="hljs-number">13875</span>, <span class="hljs-number">14116</span>, <span class="hljs-number">12864</span>, <span class="hljs-number">13681</span>, <span class="hljs-number">11040</span>, <span class="hljs-number">13232</span>, <span class="hljs-number">13854</span>, <span class="hljs-number">11932</span>, <span class="hljs-number">13194</span>, <span class="hljs-number">13055</span>)</span>
-p_ets &lt;- <span class="hljs-function">c(<span class="hljs-number">12330</span>, <span class="hljs-number">12108</span>, <span class="hljs-number">13667</span>, <span class="hljs-number">13131</span>, <span class="hljs-number">13312</span>, <span class="hljs-number">12849</span>, <span class="hljs-number">13242</span>, <span class="hljs-number">12662</span>, <span class="hljs-number">12821</span>, <span class="hljs-number">13507</span>, <span class="hljs-number">12981</span>, <span class="hljs-number">12514</span>)</span>
-p_tbats &lt;- <span class="hljs-function">c(<span class="hljs-number">12235</span>, <span class="hljs-number">12165</span>, <span class="hljs-number">13647</span>, <span class="hljs-number">13468</span>, <span class="hljs-number">13012</span>, <span class="hljs-number">12736</span>, <span class="hljs-number">13172</span>, <span class="hljs-number">12876</span>, <span class="hljs-number">12754</span>, <span class="hljs-number">13635</span>, <span class="hljs-number">12642</span>, <span class="hljs-number">12582</span>)</span>
-p_arima &lt;- <span class="hljs-function">c(<span class="hljs-number">12481</span>, <span class="hljs-number">12550</span>, <span class="hljs-number">13304</span>, <span class="hljs-number">13005</span>, <span class="hljs-number">12843</span>, <span class="hljs-number">13314</span>, <span class="hljs-number">12921</span>, <span class="hljs-number">12966</span>, <span class="hljs-number">12927</span>, <span class="hljs-number">13095</span>, <span class="hljs-number">12966</span>, <span class="hljs-number">13069</span>)</span>
+<span class="hljs-keyword">library</span>(ggplot2)
 
-<span class="hljs-function">library(ggfortify)</span>
-<span class="hljs-function">autoplot(<span class="hljs-function">ts(<span class="hljs-function">cbind(p_ets, p_tbats, p_arima, actual)</span>, start = <span class="hljs-function">c(<span class="hljs-number">2016</span>,<span class="hljs-number">1</span>)</span>, end = <span class="hljs-function">c(<span class="hljs-number">2016</span>, <span class="hljs-number">12</span>)</span>, frequency = <span class="hljs-number">12</span>)</span>,facets = FALSE)</span></code></pre>
+ggplot(compare) + geom_line(aes(x=Month, y=actual, color=<span class="hljs-string">"actual"</span>)) + geom_line(aes(x=Month, y=p_ETS, col=<span class="hljs-string">"Model 1 ETS"</span>)) + geom_line(aes(x=Month, y=p_TBATS, col=<span class="hljs-string">"Model 2 TBATS"</span>)) + geom_line(aes(x=Month, y=p_ARIMA, col=<span class="hljs-string">"Model 3 ARIMA"</span>)) + scale_color_discrete(name=<span class="hljs-string">"Models"</span>) + labs(title=<span class="hljs-string">"Graph comparing predicted data with actual data"</span>, x = <span class="hljs-string">"Months (in 2016)"</span>, y = <span class="hljs-string">"Quantity"</span>) + scale_x_continuous(breaks=seq(<span class="hljs-number">1</span>, <span class="hljs-number">12</span>, <span class="hljs-number">1</span>), labels=month.name)</code></pre>
 
-<p><img src="http://i.imgur.com/aLY8JVS.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/aHoha6I.png" alt="enter image description here" title=""></p>
 
-<p>The actual data has a sharp (could be considered as seasonal trend) decline, in January, July and October. And because our forecasting models did not predict that, it is hard to choose a best model. We will dig deep to find the perfect model that can explains(predicts) this kind of a seasonality before final report. <br>
-Meanwhile investigating the data, we found some correlation between sales of diesel cars and total quantity of sales, that those are in inverse proportion to each other.</p>
+<p>The actual data shows a sharp decline, in January, July and October, which could be considered as a seasonality. Unfortunately, our models did not to predict that kind of fluctuation. But still we can choose a best model within this circumstance by comparing the data in a total amount(meaning we’ll compare the sum, as a year), since it is likely that the sharp decline can be offset by over-predicted months.</p>
 
-<pre class="prettyprint"><code class=" hljs scss"><span class="hljs-function">autoplot(<span class="hljs-function">ts(<span class="hljs-function">cbind(dt$Quantity, dt$Quantity_Diesel)</span>, start = <span class="hljs-function">c(<span class="hljs-number">2007</span>,<span class="hljs-number">1</span>)</span>, end = <span class="hljs-function">c(<span class="hljs-number">2016</span>, <span class="hljs-number">12</span>)</span>, frequency = <span class="hljs-number">12</span>)</span>,facets = FALSE)</span></code></pre>
-
-<p><img src="http://i.imgur.com/DxWEM15.png" alt="enter image description here" title=""></p>
-
-<p>Series 1 is <em>Quantity</em> (total sales), and Series 2 is quantity of diesel car sold.</p>
-
-<p>Correlation is so evident. Sales of diesel tended to follow total sales, but starting from 2012 total sales were increasing while the sale of diesel cars were decreasing. There would be a better model, or better way to produce forecasts by taking account this correlation.  <br>
-But for now(2nd scrum) we will stick with current models. On 2nd scrum, we have decided to compare yearly(by total sales) rather than monthly. Total sales of 2016 did not show big difference than our predictions.</p>
-
-<p>total sales were as follow</p>
+<p>Total sales are as follow</p>
 
 <table>
 <thead>
@@ -432,7 +425,7 @@ But for now(2nd scrum) we will stick with current models. On 2nd scrum, we have 
   <td>155441</td>
 </tr>
 <tr>
-  <td>-</td>
+  <td>Error</td>
   <td>-1068</td>
   <td>-868</td>
   <td>-1385</td>
@@ -440,33 +433,31 @@ But for now(2nd scrum) we will stick with current models. On 2nd scrum, we have 
 </tbody></table>
 
 
-<p>and because TBATS model showed the least error, we will use TBATS to predict car sales in 2017.</p>
+<p>and because TBATS model showed the least error, we will use TBATS model to predict in 2017.</p>
 
-<pre class="prettyprint"><code class=" hljs erlang">dt_ts&lt;-ts(dt$<span class="hljs-variable">Quantity</span>, frequency=<span class="hljs-number">12</span>, start=c(<span class="hljs-number">2007</span>,<span class="hljs-number">1</span>))
+<pre class="prettyprint"><code class=" hljs xml">dt_ts<span class="hljs-tag">&lt;<span class="hljs-title">-ts(dt$Quantity,</span> <span class="hljs-attribute">frequency</span>=<span class="hljs-value">12,</span> <span class="hljs-attribute">start</span>=<span class="hljs-value">c(2007,1))</span>
 
-<span class="hljs-function"><span class="hljs-title">library</span><span class="hljs-params">(forecast)</span>
-<span class="hljs-title">fut_tbats</span> = <span class="hljs-title">forecast</span><span class="hljs-params">(<span class="hljs-function_name">tbats</span>(dt_ts), h=<span class="hljs-number">11</span>)</span>
-<span class="hljs-title">plot</span><span class="hljs-params">(fut_tbats)</span></span></code></pre>
+<span class="hljs-attribute">pred_TBATS</span> = <span class="hljs-attribute">forecast</span>(<span class="hljs-attribute">tbats</span>(<span class="hljs-attribute">dt_ts</span>), <span class="hljs-attribute">h</span>=<span class="hljs-value">11)</span>
+<span class="hljs-attribute">plot</span>(<span class="hljs-attribute">pred_TBATS</span>, <span class="hljs-attribute">xlab</span> =<span class="hljs-value">"Year"</span><span class="hljs-value">,</span> <span class="hljs-attribute">ylab</span> = "<span class="hljs-attribute">Quantity</span>")</span></code></pre>
 
-<p>We removed end parameter when assigning a new time series data. So <em>dt_ts</em> should look like this</p>
+<p>Note that we removed <em>end</em> parameter when assigning a new time series data.  <br>
+So <em>dt_ts</em> should look like this</p>
 
 <p><img src="http://i.imgur.com/8o3ueHW.png" alt="enter image description here" title=""></p>
 
-<p>Because our data has its record until 2017 January, we only have to predict 11 remaining months for 2017 (Feb~Dec). So we changed <em>h = 11</em> in forecast().</p>
+<p>And because our data has its record until 2017 January, we only have to predict 11 remaining months for 2017 (Feb~Dec). Hence we changed <em>h = 11</em> in forecast().</p>
 
 <p>Following picture is the prediction of car sales in 2017 by TBATS model.</p>
 
-<p><img src="http://i.imgur.com/5duqgqO.png" alt="enter image description here" title=""></p>
+<p><img src="http://i.imgur.com/2KmpBRr.png" alt="enter image description here" title=""></p>
 
 <p>and this is the summary of TBATS prediction.</p>
 
-
-
-<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">summary</span><span class="hljs-params">(fut_tbats)</span></span></code></pre>
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">summary</span><span class="hljs-params">(pred_<span class="hljs-variable">TBATS</span>)</span></span></code></pre>
 
 <p><img src="http://i.imgur.com/4K0Q9uw.png" alt="enter image description here" title=""></p>
 
-<h4 id="conclusion">Conclusion</h4>
+<h4 id="conclusion"><strong>Conclusion</strong></h4>
 
-<p>The forecast car sales in 2017 would be 163428. (Actual January sales 13055 + predicted sales from Feb~Dec 150373)</p></div></body>
+<p>The forecast car sales in 2017 would be <strong>163428</strong>. (Actual January sales 13055 + predicted sales from Feb~Dec 150373)</p></div></body>
 </html>

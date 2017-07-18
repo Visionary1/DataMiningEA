@@ -7,11 +7,9 @@
 <link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
 <style type="text/css">
-
 body {
   font-size:12pt;
 }
-
 </style>
 </head>
 <body><div class="container"><h1 id="data-mining-17s-team-project">Data Mining 17S Team Project</h1>
@@ -405,13 +403,26 @@ ggplot(compare) + geom_line(aes(x=Month, y=actual, color=<span class="hljs-strin
 
 <p><img src="http://i.imgur.com/aHoha6I.png" alt="enter image description here" title=""></p>
 
-<p>The actual data shows a sharp decline, in January, July and October, which could be considered as a seasonality. Unfortunately, our models did not to predict that kind of fluctuation. But still we can choose a best model within this circumstance by comparing the data in a total amount(meaning we’ll compare the sum, as a year), since it is likely that the sharp decline can be offset by over-predicted months.</p>
+<pre class="prettyprint"><code class="language-r hljs ">&gt; p_ETS - actual <span class="hljs-comment"># error value</span>
+ [<span class="hljs-number">1</span>]  <span class="hljs-number">1339</span>  -<span class="hljs-number">114</span>  -<span class="hljs-number">208</span>  -<span class="hljs-number">985</span>   <span class="hljs-number">448</span>  -<span class="hljs-number">832</span>  <span class="hljs-number">2202</span>  -<span class="hljs-number">570</span> -<span class="hljs-number">1033</span>  <span class="hljs-number">1575</span>  -<span class="hljs-number">213</span>  -<span class="hljs-number">541</span>
 
-<p>Total sales are as follow</p>
+&gt; mean(p_ETS - actual) <span class="hljs-comment"># average error value</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">89</span>
+
+&gt; p_TBATS - actual <span class="hljs-comment"># error value</span>
+ [<span class="hljs-number">1</span>]  <span class="hljs-number">1244</span>   -<span class="hljs-number">57</span>  -<span class="hljs-number">228</span>  -<span class="hljs-number">648</span>   <span class="hljs-number">148</span>  -<span class="hljs-number">945</span>  <span class="hljs-number">2132</span>  -<span class="hljs-number">356</span> -<span class="hljs-number">1100</span>  <span class="hljs-number">1703</span>  -<span class="hljs-number">552</span>  -<span class="hljs-number">473</span>
+&gt; mean(p_TBATS - actual) <span class="hljs-comment"># average error value</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">72.33333</span>
+
+&gt; p_ARIMA - actual <span class="hljs-comment"># error value</span>
+ [<span class="hljs-number">1</span>]  <span class="hljs-number">1490</span>   <span class="hljs-number">328</span>  -<span class="hljs-number">571</span> -<span class="hljs-number">1111</span>   -<span class="hljs-number">21</span>  -<span class="hljs-number">367</span>  <span class="hljs-number">1881</span>  -<span class="hljs-number">266</span>  -<span class="hljs-number">927</span>  <span class="hljs-number">1163</span>  -<span class="hljs-number">228</span>    <span class="hljs-number">14</span>
+&gt; mean(p_ARIMA - actual) <span class="hljs-comment"># average error value</span>
+[<span class="hljs-number">1</span>] <span class="hljs-number">115.4167</span></code></pre>
 
 <table>
 <thead>
 <tr>
+  <th>Indicator</th>
   <th>Actual</th>
   <th>ETS</th>
   <th>TBATS</th>
@@ -419,21 +430,37 @@ ggplot(compare) + geom_line(aes(x=Month, y=actual, color=<span class="hljs-strin
 </tr>
 </thead>
 <tbody><tr>
+  <td>Total sales</td>
   <td>154056</td>
   <td>155124</td>
   <td>154924</td>
   <td>155441</td>
 </tr>
 <tr>
-  <td>Error</td>
-  <td>-1068</td>
-  <td>-868</td>
-  <td>-1385</td>
+  <td>Total Error Value</td>
+  <td></td>
+  <td>+1068</td>
+  <td>+868</td>
+  <td>+1385</td>
+</tr>
+<tr>
+  <td>Average Error Value</td>
+  <td></td>
+  <td>89</td>
+  <td>72.33333</td>
+  <td>115.4167</td>
+</tr>
+<tr>
+  <td>Error Rate (%)</td>
+  <td></td>
+  <td>0.693</td>
+  <td>0.563</td>
+  <td>0.899</td>
 </tr>
 </tbody></table>
 
 
-<p>and because TBATS model showed the least error, we will use TBATS model to predict in 2017.</p>
+<p>The actual data shows a sharp decline, in January, July and October, which could be considered as a seasonality. Unfortunately, our models did not to predict that kind of fluctuation. Within this test however, <em>TBATS</em> model showed the least error rate and its average error value is extremely low. So we will use this model to predict car sales in 2017.</p>
 
 <pre class="prettyprint"><code class=" hljs xml">dt_ts<span class="hljs-tag">&lt;<span class="hljs-title">-ts(dt$Quantity,</span> <span class="hljs-attribute">frequency</span>=<span class="hljs-value">12,</span> <span class="hljs-attribute">start</span>=<span class="hljs-value">c(2007,1))</span>
 
@@ -452,6 +479,8 @@ So <em>dt_ts</em> should look like this</p>
 <p><img src="http://i.imgur.com/2KmpBRr.png" alt="enter image description here" title=""></p>
 
 <p>and this is the summary of TBATS prediction.</p>
+
+
 
 <pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">summary</span><span class="hljs-params">(pred_<span class="hljs-variable">TBATS</span>)</span></span></code></pre>
 

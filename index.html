@@ -56,10 +56,7 @@ body {
 
 <h3 id="problem-description"><strong>Problem Description</strong></h3>
 
-<p>We want to be able to predict future data results based on what already achieved in the past, without guessing wildly, where everyone is able to make speculation backed by data. With the available past sales data’s range of 10 years, we can use it to predict the sales data for following months. As of now, our available sales data up to January 2017, and it gives us opportunity to attempt predicting sales for February, March, May, and so on. The problem with predicting the future is uncertainties. If we ignore this problem, it will makes the whole project itself no different than making a wild guess. Uncertainties happened when the data that was provided shows more than one possible result, which means the further we try to predict, the more uncertainties shows up as we still need to determine the amount of possible outcome from the earlier prediction.  <br>
-The forecasting models will greatly help us in predicting the future based on our available data and it match well to assist us in processing.</p>
-
-
+<p>We want to be able to predict future data results based on what already achieved in the past, without guessing wildly, where everyone is able to make speculation backed by data. With the available past sales data’s range of 10 years, we can use it to predict the sales data for following months. As of now, our available sales data up to January 2017, and it gives us opportunity to attempt predicting sales for February, March, May, and so on. The problem with predicting the future is uncertainties. If we ignore this problem, it will makes the whole project itself no different than making a wild guess. Uncertainties happened when the data that was provided shows more than one possible result, which means the further we try to predict, the more uncertainties shows up as we still need to determine the amount of possible outcome from the earlier prediction. The forecasting models will greatly help us in predicting the future based on our available data and it match well to assist us in processing.</p>
 
 <h3 id="data-description"><strong>Data Description</strong></h3>
 
@@ -149,9 +146,7 @@ dt_ts&lt;<span class="hljs-function">-ts(dt$Quantity, frequency=<span class="hlj
 
 <h4 id="model-1-exponential-state-smoothingets"><strong>Model 1. Exponential State Smoothing(ETS)</strong></h4>
 
-<p>The ETS function is in <em>forecast</em> package, and is used for making forecasts. Although it is best used in data that where past observations are weighted equally(simple moving average), we did give it a try.</p>
-
-
+<p>The ETS function is in <em>forecast</em> package, and is used for making forecasts. Although it is best used in data that where past observations are weighted equally(simple moving average), let’s give it a try.</p>
 
 <pre class="prettyprint"><code class=" hljs scss">fitstl&lt;<span class="hljs-function">-stl(dt_ts, s.window = <span class="hljs-string">"period"</span>)</span>
 pred_ETS&lt;<span class="hljs-function">-forecast(fitstl, method = <span class="hljs-string">"ets"</span>, h=<span class="hljs-number">12</span>)</span>
@@ -215,6 +210,7 @@ pred_<span class="hljs-variable">ARIMA</span> = forecast(aarima, h=<span class="
 <table>
 <thead>
 <tr>
+  <th>Month</th>
   <th>Actual</th>
   <th>ETS</th>
   <th>TBATS</th>
@@ -222,73 +218,85 @@ pred_<span class="hljs-variable">ARIMA</span> = forecast(aarima, h=<span class="
 </tr>
 </thead>
 <tbody><tr>
-  <td>Jan 10991</td>
+  <td>January</td>
+  <td>10991</td>
   <td>12330.43</td>
   <td>12234.69</td>
   <td>12480.50</td>
 </tr>
 <tr>
-  <td>Feb 12222</td>
+  <td>February</td>
+  <td>12222</td>
   <td>12107.88</td>
   <td>12164.86</td>
   <td>12549.69</td>
 </tr>
 <tr>
-  <td>Mar 13875</td>
+  <td>March</td>
+  <td>13875</td>
   <td>13666.77</td>
   <td>13647.09</td>
   <td>13303.97</td>
 </tr>
 <tr>
-  <td>Apr 14116</td>
+  <td>April</td>
+  <td>14116</td>
   <td>13131.34</td>
   <td>13467.60</td>
   <td>13005.00</td>
 </tr>
 <tr>
-  <td>May 12864</td>
+  <td>May</td>
+  <td>12864</td>
   <td>13312.24</td>
   <td>13011.46</td>
   <td>12843.02</td>
 </tr>
 <tr>
-  <td>Jun 13681</td>
+  <td>June</td>
+  <td>13681</td>
   <td>12849.02</td>
   <td>12735.90</td>
   <td>13314.40</td>
 </tr>
 <tr>
-  <td>Jul 11040</td>
+  <td>July</td>
+  <td>11040</td>
   <td>13241.80</td>
   <td>13171.97</td>
   <td>12920.75</td>
 </tr>
 <tr>
-  <td>Aug 13232</td>
+  <td>August</td>
+  <td>13232</td>
   <td>12661.62</td>
   <td>12876.17</td>
   <td>12966.35</td>
 </tr>
 <tr>
-  <td>Sep 13854</td>
+  <td>September</td>
+  <td>13854</td>
   <td>12820.76</td>
   <td>12754.44</td>
   <td>12926.61</td>
 </tr>
 <tr>
-  <td>Oct 11932</td>
+  <td>October</td>
+  <td>11932</td>
   <td>13506.48</td>
   <td>13634.88</td>
   <td>13095.10</td>
 </tr>
 <tr>
-  <td>Nov 13194</td>
+  <td>November</td>
+  <td>13194</td>
   <td>12980.64</td>
   <td>12641.90</td>
   <td>12965.48</td>
 </tr>
 <tr>
-  <td>Dec 13055</td>
+  <td>December</td>
+  <td>13055</td>
   <td>12514.44</td>
   <td>12582.13</td>
   <td>13069.26</td>
@@ -301,6 +309,7 @@ pred_<span class="hljs-variable">ARIMA</span> = forecast(aarima, h=<span class="
 <table>
 <thead>
 <tr>
+  <th>Month</th>
   <th>Actual</th>
   <th>ETS</th>
   <th>TBATS</th>
@@ -308,79 +317,92 @@ pred_<span class="hljs-variable">ARIMA</span> = forecast(aarima, h=<span class="
 </tr>
 </thead>
 <tbody><tr>
-  <td>Jan 10991</td>
+  <td>January</td>
+  <td>10991</td>
   <td>12330</td>
   <td>12235</td>
   <td>12481</td>
 </tr>
 <tr>
-  <td>Feb 12222</td>
+  <td>February</td>
+  <td>12222</td>
   <td>12108</td>
   <td>12165</td>
   <td>12550</td>
 </tr>
 <tr>
-  <td>Mar 13875</td>
+  <td>March</td>
+  <td>13875</td>
   <td>13667</td>
   <td>13647</td>
   <td>13304</td>
 </tr>
 <tr>
-  <td>Apr 14116</td>
+  <td>April</td>
+  <td>14116</td>
   <td>13131</td>
   <td>13468</td>
   <td>13005</td>
 </tr>
 <tr>
-  <td>May 12864</td>
+  <td>May</td>
+  <td>12864</td>
   <td>13312</td>
   <td>13012</td>
   <td>12843</td>
 </tr>
 <tr>
-  <td>Jun 13681</td>
+  <td>June</td>
+  <td>13681</td>
   <td>12849</td>
   <td>12736</td>
   <td>13314</td>
 </tr>
 <tr>
-  <td>Jul 11040</td>
+  <td>July</td>
+  <td>11040</td>
   <td>13242</td>
   <td>13172</td>
   <td>12921</td>
 </tr>
 <tr>
-  <td>Aug 13232</td>
+  <td>August</td>
+  <td>13232</td>
   <td>12662</td>
   <td>12876</td>
   <td>12966</td>
 </tr>
 <tr>
-  <td>Sep 13854</td>
+  <td>September</td>
+  <td>13854</td>
   <td>12821</td>
   <td>12754</td>
   <td>12927</td>
 </tr>
 <tr>
-  <td>Oct 11932</td>
+  <td>October</td>
+  <td>11932</td>
   <td>13507</td>
   <td>13635</td>
   <td>13095</td>
 </tr>
 <tr>
-  <td>Nov 13194</td>
+  <td>November</td>
+  <td>13194</td>
   <td>12981</td>
   <td>12642</td>
   <td>12966</td>
 </tr>
 <tr>
-  <td>Dec 13055</td>
+  <td>December</td>
+  <td>13055</td>
   <td>12514</td>
   <td>12582</td>
   <td>13069</td>
 </tr>
 <tr>
-  <td>total 154056</td>
+  <td>Total</td>
+  <td>154056</td>
   <td>155124</td>
   <td>154924</td>
   <td>155441</td>
@@ -405,7 +427,6 @@ ggplot(compare) + geom_line(aes(x=Month, y=actual, color=<span class="hljs-strin
 
 <pre class="prettyprint"><code class="language-r hljs ">&gt; p_ETS - actual <span class="hljs-comment"># error value</span>
  [<span class="hljs-number">1</span>]  <span class="hljs-number">1339</span>  -<span class="hljs-number">114</span>  -<span class="hljs-number">208</span>  -<span class="hljs-number">985</span>   <span class="hljs-number">448</span>  -<span class="hljs-number">832</span>  <span class="hljs-number">2202</span>  -<span class="hljs-number">570</span> -<span class="hljs-number">1033</span>  <span class="hljs-number">1575</span>  -<span class="hljs-number">213</span>  -<span class="hljs-number">541</span>
-
 &gt; mean(p_ETS - actual) <span class="hljs-comment"># average error value</span>
 [<span class="hljs-number">1</span>] <span class="hljs-number">89</span>
 
